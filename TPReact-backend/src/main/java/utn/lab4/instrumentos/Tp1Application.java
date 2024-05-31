@@ -10,17 +10,15 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.web.bind.annotation.GetMapping;
 import utn.lab4.instrumentos.Entity.Categoria;
 import utn.lab4.instrumentos.Entity.Instrumento;
-import utn.lab4.instrumentos.Repository.CategoriaRepository;
-import utn.lab4.instrumentos.Repository.InstrumentoRepository;
-import utn.lab4.instrumentos.Repository.PedidoDetalleRepository;
-import utn.lab4.instrumentos.Repository.PedidoRepository;
+import utn.lab4.instrumentos.Entity.Usuario;
+import utn.lab4.instrumentos.Repository.*;
 
 @SpringBootApplication
 public class Tp1Application {
 
 	public static void main(String[] args) {
 		SpringApplication.run(Tp1Application.class, args);
-		System.out.println("Funcionando");
+
 	}
 	@GetMapping("/")
 	public String paginaInicio() {
@@ -35,7 +33,8 @@ public class Tp1Application {
 	CommandLineRunner init(CategoriaRepository categoriaRepository,
 						   InstrumentoRepository instrumentoRepository,
 						   PedidoDetalleRepository pedidoDetalleRepository,
-						   PedidoRepository pedidoRepository
+						   PedidoRepository pedidoRepository,
+						   UsuarioRepository usuarioRepository
 						   ) {
 		return args -> {
 
@@ -65,6 +64,23 @@ public class Tp1Application {
 			instrumentoRepository.save(new Instrumento(9L, "Instrumentos De Percusión Niños Set Musical Con Estuche", "KNIGHT", "LB17", "nro1.jpg", "300", 15, 2700, "Estas viendo un excelente y completísimo set de percusion para niños con estuche rígido, equipado con los instrumentos mas divertidos! De gran calidad y sonoridad. Ideal para jardines, escuelas primarias, musicoterapeutas o chicos que se quieran iniciar en la música de la mejor manera. Es un muy buen producto que garantiza entretenimiento en cualquier casa o reunión, ya que esta equipado para que varias personas al mismo tiempo estén tocando un instrumento.",percusion));
 			instrumentoRepository.save(new Instrumento(10L, "Batería Musical Infantil Juguete Niño 9 Piezas Palillos", "Bateria", "Infantil", "nro5.jpg", "250", 250, 380, "DESCRIPCIÓN: DE 1 A 3 AÑOS. EL SET INCLUYE 5 TAMBORES, PALILLOS Y EL PLATILLO TAL CUAL LAS FOTOS. SONIDOS REALISTAS Y FÁCIL DE MONTAR. MEDIDAS: 40X20X46 CM",percusion));
 			instrumentoRepository.save(new Instrumento(11L, "Saxofón Alto", "YAMAHA", "YAS-280", "nro11.jpg", "G", 7, 3200, "El saxofón alto Yamaha YAS-280 ofrece una gran calidad de sonido y una excelente durabilidad. Perfecto para estudiantes y músicos avanzados. Incluye estuche y boquilla.",viento));
+
+			if (usuarioRepository.findByNombreUsuario("admin").isEmpty()) {
+				Usuario admin = new Usuario();
+				admin.setNombreUsuario("admin");
+				admin.setClave("admin123"); // La contraseña se encriptará en el servicio
+				admin.setRol("ROLE_ADMIN");
+				usuarioRepository.save(admin);
+			}
+
+			if (usuarioRepository.findByNombreUsuario("user").isEmpty()) {
+				Usuario user = new Usuario();
+				user.setNombreUsuario("user");
+				user.setClave("user123"); // La contraseña se encriptará en el servicio
+				user.setRol("ROLE_USER");
+				usuarioRepository.save(user);
+			}
+
 
 		};
 	};
